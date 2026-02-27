@@ -8,14 +8,14 @@ exports.login = async (req, res) => {
 
         if (!DUI || !password) {
             return res.status(400).json({
-                message: 'DUI y contraseña son requeridos'
+                message: 'Credenciales incompletas'
             })
         }
 
         const isValidDUI = validation.validation(DUI)
 
         if (!isValidDUI) {
-            return res.status(400).json({ message: 'Formato de DUI inválido' });
+            return res.status(400).json({ message: 'Ingresa un DUI válido (xxxxxxxx-x)' });
         }
 
         const user = await Data.findOne({ DUI: DUI, password: password })
@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Credenciales inválidas' });
         }
 
-        res.json({ message: 'Login exitoso', isLoggin: true, user: user });
+        res.json({ message: 'Login exitoso', isLogged: true, user: user });
 
     } catch (error) {
         console.log(error)
@@ -36,19 +36,18 @@ exports.login = async (req, res) => {
 exports.register = async (req, res) => {
     try {
 
-        const { nombre, DUI, password } = req.body
+        const { correo, DUI, password, confirm_password } = req.body
 
-        if (!nombre || !DUI || !password) {
+        if (!correo || !DUI || !password || !confirm_password) {
             return res.status(400).json({
-                message: 'Nombre, DUI y contraseña son requeridos'
+                message: 'Datos incompletos'
             })
         }
-
 
         const isValidDUI = validation.validation(DUI)
 
         if (!isValidDUI) {
-            return res.status(400).json({ message: 'Formato de DUI inválido' });
+            return res.status(400).json({ message: 'Ingresa un DUI válido (xxxxxxxx-x)' });
         }
 
         const existUser = await Data.findOne({ DUI: DUI })
@@ -59,8 +58,14 @@ exports.register = async (req, res) => {
             })
         }
 
+        if (password !== confirm_password) {
+            return res.status(400).json({
+                message: "Las contraseñas no coinciden"
+            })
+        }
+
         const newUser = new Data({
-            nombre: nombre,
+            correo: correo,
             DUI: DUI,
             password: password
         })
@@ -77,4 +82,5 @@ exports.register = async (req, res) => {
         next();
     }
 }
+
 

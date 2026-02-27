@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const dataSchema = new Schema({
-    nombre: {
+    correo: {
         type: String,
         required: true
     },
@@ -16,4 +16,4 @@ const dataSchema = new Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Data', dataSchema);
+module.exports = mongoose.model('Users', dataSchema);
