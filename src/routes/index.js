@@ -1,6 +1,6 @@
-const { Router } = require('express');
+import { Router } from 'express';
 const router = Router();
-const dataController = require('../controllers/controller');
+import { login, register } from '../controllers/controller.js'
 
 //routes
 router.get('/api/test', (req, res) => {
@@ -11,7 +11,7 @@ router.get('/api/test', (req, res) => {
     res.json(data);
 });
 
-router.post('/api/login', dataController.login)
-router.post('/api/register', dataController.register)
+router.post('/api/login', login)
+router.post('/api/register', register)
 
-module.exports = router;
+export default router

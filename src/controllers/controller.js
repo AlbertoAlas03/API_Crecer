@@ -1,7 +1,7 @@
-const Data = require('../models/data');
-const validation = require('../utils/validation')
+import { Data } from '../models/data.js'
+import validation from '../utils/validation.js'
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
     try {
 
         const { DUI, password } = req.body
@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
     }
 }
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
     try {
 
         const { correo, DUI, password, confirm_password } = req.body
