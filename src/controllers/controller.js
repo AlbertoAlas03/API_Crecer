@@ -44,7 +44,7 @@ export const register = async (req, res) => {
             })
         }
 
-        const isValidDUI = validation.validation(DUI)
+        const isValidDUI = validation(DUI)
 
         if (!isValidDUI) {
             return res.status(400).json({ message: 'Ingresa un DUI válido (xxxxxxxx-x)' });
