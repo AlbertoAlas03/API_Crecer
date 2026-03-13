@@ -2,22 +2,22 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const dataSchema = new Schema({
-    codigo: {
+    email: {
         type: String,
         required: true
     },
-    nombre: {
+    DUI: {
         type: String,
         required: true
     },
-    fecha_nacimiento: {
-        type: Date,
-        required: true
-    },
-    sexo: {
+    password: {
         type: String,
         required: true
-    }
+    },
+    children: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Children"
+    }]
 }, { timestamps: true });
 
-export const KidsForAdd = mongoose.model('KidsForAdd', dataSchema);
+export const Users = mongoose.model('Users', dataSchema);
