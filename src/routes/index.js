@@ -9,7 +9,10 @@ import {
     add_allergies,
     add_conditions,
     add_medications,
-    add_professional_preferred
+    add_professional_preferred,
+    delete_item,
+    update_item,
+    delete_children
 } from '../controllers/controller.js'
 
 //routes
@@ -30,5 +33,8 @@ router.post('/api/add_allergies', add_allergies)
 router.post('/api/add_conditions', add_conditions)
 router.post('/api/add_medications', add_medications)
 router.post('/api/add_professional_preferred', add_professional_preferred)
+router.post('/api/delete_item', delete_item)
+router.post('/api/update_item', update_item)
+router.post('/api/delete_children', delete_children)
 
 export default router

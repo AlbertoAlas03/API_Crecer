@@ -142,6 +142,32 @@ export const add_children = async (req, res) => {
     }
 }
 
+export const delete_children = async (req, res) => {
+    try {
+        const { _id, _id_children } = req.body
+
+        const user = await Users.findByIdAndUpdate(
+            _id,
+            { $pull: { children: _id_children } },
+        )
+
+        if (!user) {
+            return res.status(404).json({
+                message: "No se pudo eliminar el registro."
+            })
+        }
+
+        return res.status(200).json({
+            message: "Se eliminó con éxito."
+        })
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error);
+    }
+}
+
 export const register_children = async (req, res) => {
     try {
         const { code, name, birthDate, gender } = req.body
@@ -303,6 +329,72 @@ export const add_professional_preferred = async (req, res) => {
 
         return res.status(200).json({
             message: "Profesional preferido del niño/a agregado con exito!"
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error);
+    }
+}
+
+export const delete_item = async (req, res) => {
+    try {
+        const { _id, field, value } = req.body
+
+        if (!_id || !field || !value) {
+            return res.status(400).json({
+                message: "Faltan datos"
+            })
+        }
+
+        const children = await Children.findByIdAndUpdate(
+            _id,
+            { $pull: { [field]: value } }
+        )
+
+        if (!children) {
+            return res.status(404).json({
+                message: "No se pudo eliminar el registro."
+            })
+        }
+
+        return res.status(200).json({
+            message: "Se eliminó con éxito."
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error);
+    }
+}
+
+export const update_item = async (req, res) => {
+    try {
+        const { _id, field, previous_value, new_value } = req.body
+
+        if (!_id || !field || !previous_value || !new_value) {
+            return res.status(400).json({
+                message: "Faltan datos"
+            })
+        }
+
+        const children = await Children.findById(_id)
+
+        const index = children[field].indexOf(previous_value);
+
+        const update = await Children.findByIdAndUpdate(
+            _id,
+            { $set: { [`${field}.${index}`]: new_value } }
+        );
+
+        if (!update) {
+            return res.status(404).json({
+                message: "No se pudo actualizar la información."
+            })
+        }
+
+        return res.status(200).json({
+            message: "Información actualizada con éxito."
         })
 
     } catch (error) {
