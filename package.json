@@ -21,6 +21,7 @@
     "mongodb": "^7.1.0",
     "mongoose": "^9.2.2",
     "morgan": "^1.10.1",
+    "nodemailer": "^8.0.3",
     "underscore": "^1.13.8"
   }
 }

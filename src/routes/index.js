@@ -12,7 +12,10 @@ import {
     add_professional_preferred,
     delete_item,
     update_item,
-    delete_children
+    delete_children,
+    requestCode,
+    verificationCode,
+    changePassword
 } from '../controllers/controller.js'
 
 //routes
@@ -36,5 +39,8 @@ router.post('/api/add_professional_preferred', add_professional_preferred)
 router.post('/api/delete_item', delete_item)
 router.post('/api/update_item', update_item)
 router.post('/api/delete_children', delete_children)
+router.post('/api/requestCode', requestCode)
+router.post('/api/verificationCode', verificationCode)
+router.post('/api/ChangePassword', changePassword)
 
 export default router
