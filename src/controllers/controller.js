@@ -3,6 +3,7 @@ import { Children } from '../models/Children.js'
 import { ChangePassword } from '../models/ChangePassword.js'
 import { validationDUI, validationEmail } from '../utils/validation.js'
 import transporter from '../emails/mailer.js'
+import CONSTANTS_TEXT from '../config/constants.js'
 import dotnev from 'dotenv'
 dotnev.config()
 
@@ -13,14 +14,14 @@ export const login = async (req, res) => {
 
         if (!DUI || !password) {
             return res.status(400).json({
-                message: 'Credenciales incompletas'
+                message: CONSTANTS_TEXT.login
             })
         }
 
         const isValidDUI = validationDUI(DUI)
 
         if (!isValidDUI) {
-            return res.status(400).json({ message: 'Ingresa un DUI válido (xxxxxxxx-x)' });
+            return res.status(400).json({ message: CONSTANTS_TEXT.invalid_DUI });
         }
 
         const user = await Users
@@ -28,7 +29,7 @@ export const login = async (req, res) => {
             .populate("children");
 
         if (!user) {
-            return res.status(401).json({ message: 'Credenciales inválidas' });
+            return res.status(401).json({ message: CONSTANTS_TEXT.invalid_credentials });
         }
 
         return res.status(200).json({ message: 'Login exitoso', isLogged: true, user: user });
@@ -36,7 +37,6 @@ export const login = async (req, res) => {
     } catch (error) {
         console.log(error)
         return res.status(500).send(error);
-        next();
     }
 }
 
@@ -44,35 +44,40 @@ export const login = async (req, res) => {
 export const register = async (req, res) => {
     try {
 
-        const { email, DUI, password, confirm_password } = req.body
+        const { name, lastName, email, DUI, password, confirm_password } = req.body
 
-        if (!email || !DUI || !password || !confirm_password) {
+        if (!name || !lastName || !email || !DUI || !password || !confirm_password) {
             return res.status(400).json({
-                message: 'Datos incompletos'
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
         const isValidDUI = validationDUI(DUI)
+        const isValidEmail = validationEmail(email)
 
         if (!isValidDUI) {
-            return res.status(400).json({ message: 'Ingresa un DUI válido (xxxxxxxx-x)' });
+            return res.status(400).json({ message: CONSTANTS_TEXT.invalid_DUI });
+        } else if (!isValidEmail) {
+            return res.status(400).json({ message: CONSTANTS_TEXT.invalid_email })
         }
 
         const existUser = await Users.findOne({ DUI: DUI })
 
         if (existUser) {
             return res.status(404).json({
-                message: 'Ya existe un usuario registrado con este DUI'
+                message: CONSTANTS_TEXT.user_exists
             })
         }
 
         if (password !== confirm_password) {
             return res.status(400).json({
-                message: "Las contraseñas no coinciden"
+                message: CONSTANTS_TEXT.password_mismatch
             })
         }
 
         const newUser = new Users({
+            name: name,
+            lastName: lastName,
             email: email,
             DUI: DUI,
             password: password
@@ -81,13 +86,12 @@ export const register = async (req, res) => {
         await newUser.save()
 
         return res.status(200).json({
-            message: 'Registro exitoso'
+            message: CONSTANTS_TEXT.register_success
         })
 
     } catch (error) {
         console.log(error)
         return res.status(500).send(error);
-        next();
     }
 }
 
@@ -98,11 +102,11 @@ export const add_children = async (req, res) => {
 
         if (!code) {
             return res.status(400).json({
-                message: "NUI/NIE es requerido para registrar a su niño/a"
+                message: CONSTANTS_TEXT.incomplete_NUI_NIE
             })
         } else if (!validationDUI(code)) {
             return res.status(404).json({
-                message: "Ingresa un NUI/NIE válido (xxxxxxxx-x)"
+                message: CONSTANTS_TEXT.invalid_NUI_NIE
             })
         }
 
@@ -113,7 +117,7 @@ export const add_children = async (req, res) => {
         if (!user) {
 
             return res.status(404).json({
-                message: "No se encontró ningún usuario registrado con el DUI proporcionado"
+                message: CONSTANTS_TEXT.user_not_found
             })
         }
 
@@ -123,7 +127,7 @@ export const add_children = async (req, res) => {
 
         if (!data_Children) {
             return res.status(404).json({
-                message: "No se encontró ningún niño/a registrado con el NUI/NIE proporcionado"
+                message: CONSTANTS_TEXT.child_not_found
             })
         }
 
@@ -131,7 +135,7 @@ export const add_children = async (req, res) => {
 
         if (exists) {
             return res.status(400).json({
-                message: "El niño/a ya está registrado en tu cuenta"
+                message: CONSTANTS_TEXT.child_exists
             });
         }
 
@@ -140,7 +144,7 @@ export const add_children = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Niño/a registrado con exito!",
+            message: CONSTANTS_TEXT.child_registered,
             data: data_Children
         })
 
@@ -166,7 +170,7 @@ export const delete_children = async (req, res) => {
         }
 
         return res.status(200).json({
-            message: "Se eliminó con éxito."
+            message: CONSTANTS_TEXT.child_deleted
         })
 
 
@@ -211,7 +215,7 @@ export const add_basic_data = async (req, res) => {
 
         if (!basic_data) {
             return res.status(400).json({
-                message: "Datos incompletos"
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
@@ -224,7 +228,7 @@ export const add_basic_data = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Dato básico del niño/a agregado con exito!"
+            message: CONSTANTS_TEXT.basic_data_added
         })
 
     } catch (error) {
@@ -239,7 +243,7 @@ export const add_allergies = async (req, res) => {
 
         if (!allergies) {
             return res.status(400).json({
-                message: "Datos incompletos"
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
@@ -252,7 +256,7 @@ export const add_allergies = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Alergia del niño/a agregado con exito!"
+            message: CONSTANTS_TEXT.allergies_added
         })
 
     } catch (error) {
@@ -267,7 +271,7 @@ export const add_conditions = async (req, res) => {
 
         if (!conditions) {
             return res.status(400).json({
-                message: "Datos incompletos"
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
@@ -280,7 +284,7 @@ export const add_conditions = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Condicion del niño/a agregado con exito!"
+            message: CONSTANTS_TEXT.conditions_added
         })
 
     } catch (error) {
@@ -295,7 +299,7 @@ export const add_medications = async (req, res) => {
 
         if (!medications) {
             return res.status(400).json({
-                message: "Datos incompletos"
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
@@ -308,7 +312,7 @@ export const add_medications = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Medicación del niño/a agregada con exito!"
+            message: CONSTANTS_TEXT.medications_added
         })
 
     } catch (error) {
@@ -323,7 +327,7 @@ export const add_professional_preferred = async (req, res) => {
 
         if (!professional_preferred) {
             return res.status(400).json({
-                message: "Datos incompletos"
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
@@ -336,7 +340,7 @@ export const add_professional_preferred = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Profesional preferido del niño/a agregado con exito!"
+            message: CONSTANTS_TEXT.professional_preferred_added
         })
 
     } catch (error) {
@@ -351,7 +355,7 @@ export const delete_item = async (req, res) => {
 
         if (!_id || !field || !value) {
             return res.status(400).json({
-                message: "Faltan datos"
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
@@ -367,7 +371,7 @@ export const delete_item = async (req, res) => {
         }
 
         return res.status(200).json({
-            message: "Se eliminó con éxito."
+            message: CONSTANTS_TEXT.item_deleted
         })
 
     } catch (error) {
@@ -382,7 +386,7 @@ export const update_item = async (req, res) => {
 
         if (!_id || !field || !previous_value || !new_value) {
             return res.status(400).json({
-                message: "Faltan datos"
+                message: CONSTANTS_TEXT.incomplete_data
             })
         }
 
@@ -402,7 +406,7 @@ export const update_item = async (req, res) => {
         }
 
         return res.status(200).json({
-            message: "Información actualizada con éxito."
+            message: CONSTANTS_TEXT.item_updated
         })
 
     } catch (error) {
