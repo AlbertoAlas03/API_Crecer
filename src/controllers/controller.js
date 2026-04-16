@@ -209,6 +209,37 @@ export const register_children = async (req, res) => {
     }
 }
 
+export const delete_user = async (req, res) => {
+    try {
+
+        const { DUI } = req.body
+
+        if (!DUI) {
+            return res.status(400).json({
+                message: CONSTANTS_TEXT.incomplete_data
+            })
+        }
+
+        const request = await Users.findOneAndDelete({
+            DUI: DUI
+        })
+
+        if (!request) {
+            return res.status(404).json({
+                message: CONSTANTS_TEXT.user_not_found
+            })
+        }
+
+        return res.status(200).json({
+            message: "Usuario eliminado exitosamente."
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error);
+    }
+}
+
 export const add_basic_data = async (req, res) => {
     try {
         const { _id, basic_data } = req.body

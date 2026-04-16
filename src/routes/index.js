@@ -4,6 +4,7 @@ import {
     login,
     register,
     register_children,
+    delete_user,
     add_children,
     add_basic_data,
     add_allergies,
@@ -42,5 +43,6 @@ router.post('/api/delete_children', delete_children)
 router.post('/api/requestCode', requestCode)
 router.post('/api/verificationCode', verificationCode)
 router.post('/api/ChangePassword', changePassword)
+router.post('/api/delete_user', delete_user)
 
 export default router
