@@ -20,7 +20,20 @@ const CONSTANTS_TEXT = {
     medications_added: "Medicación del niño/a agregada con éxito.",
     professional_preferred_added: "Profesional preferido del niño/a agregado con éxito.",
     item_updated: "Dato actualizado con éxito.",
-    item_deleted: "Dato eliminado con éxito."
+    item_deleted: "Dato eliminado con éxito.",
+    error_item_deleted: "No se pudo eliminar el dato.",
+    error_item_updated: "No se pudo actualizar el dato.",
+    user_deleted: "Usuario eliminado exitosamente.",
+    login_success: "Inicio de sesión exitoso.",
+    connection_success: "conexion exitosa :)",
+    server_listening: "Server listening on port: ",
+    email_missing: "Debe ingresar su correo electrónico.",
+    email_not_found: "No se encontró ningún usuario registrado con este correo electrónico.",
+    code_send: "El código de verificación ha sido enviado exitosamente a su correo electrónico. Por favor, revise su bandeja de entrada y utilice el código para continuar con el proceso de cambio de contraseña.",
+    changePassword_request_not_found: "No se encontró una solicitud de cambio de contraseña para este correo electrónico. Por favor, verifique la información e inténtelo nuevamente.",
+    invalid_code: "El código de verificación es inválido. Por favor, verifique el código e inténtelo nuevamente.",
+    password_changed: "Contraseña actualizada exitosamente. Ahora puede iniciar sesión con su nueva contraseña.",
+    exits_request: "Ya existe una solicitud de cambio de contraseña para este correo electrónico. Por favor, revise su bandeja de entrada y utilice el código enviado anteriormente para continuar con el proceso de cambio de contraseña."
 }
 
 export default CONSTANTS_TEXT
